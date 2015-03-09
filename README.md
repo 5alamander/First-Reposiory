@@ -1,2 +1,2 @@
 # First-Reposiory
-for learning github
+can Description be changed after creation of repository
