@@ -110,3 +110,4 @@ d = ->
 d() unless false
 
 #console.log key + ' ' + value for key, value of trigger
+eval("console.log ('asdf')")

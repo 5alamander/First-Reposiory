@@ -21,3 +21,22 @@ stdin.on 'data', (input) ->
 
 sendInstruction = (player, source, aim, selection = 0, location = 0) ->
 	console.log player + ' ' + source + ' ' + aim + ' ' + selection
+
+selectPlayer = (gs, n) ->
+	if n = 0
+		return gs.attacker
+	else
+		return gs.defenser
+
+selectServant = (player, n) ->
+	tarray = [player.heroList..., player.servantList]
+	#select n
+
+selectLocation = (player, n) ->
+	tarray = player.servantList
+	#insert
+
+(if a?
+	console.log 'aaa'
+else
+	console.log 'bbb') for i in [1..10]
