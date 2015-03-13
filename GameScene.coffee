@@ -43,6 +43,9 @@ class Player
 		#check cost
 		#card.use(aimN)
 
+	toString: ->
+		
+
 
 GameScene = {}
 GameScene.createGameScene = ->

@@ -52,6 +52,7 @@ class Card
 	@buffs = []
 	@cost = 0
 	@currentCost = 0
+	this::uid = 0
 	this::aimType = at.none
 	#gs means the instance in wich gameScene
 	constructor: (@name, @cost, initial) ->
