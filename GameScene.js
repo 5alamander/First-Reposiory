@@ -55,9 +55,30 @@
 
     Player.prototype.turnEnd = function() {};
 
-    Player.prototype.useCard = function(handN, aimN) {};
+    Player.prototype.useCard = function(handN, aimN, location) {
+      if (location == null) {
+        location = 0;
+      }
+    };
 
-    Player.prototype.toString = function() {};
+    Player.prototype.echo = function() {
+      var h, s, str, _i, _j, _len, _len1, _ref, _ref1, _results;
+      str = '';
+      str += "[" + this.heroList[0].uid + ":" + this.heroList[0].name + "] ";
+      _ref = this.servantList;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        s = _ref[_i];
+        str += "[" + s.uid + ":" + s.name + "] ";
+      }
+      str += '\n';
+      _ref1 = this.handList;
+      _results = [];
+      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+        h = _ref1[_j];
+        _results.push(str += "[" + h.uid + ":" + h.name + "]");
+      }
+      return _results;
+    };
 
     return Player;
 
@@ -74,6 +95,8 @@
     gs.defenser.enemy = gs.attacker;
     gs.turn = 0;
     gs.activePlayer = 0;
+    gs.uids = {};
+    gs.uidCount = 0;
     gs.init = function(attackerCollection, defenserCollection) {
       var card, _i, _j, _len, _len1, _ref, _ref1, _results;
       this.attacker.collectionList = attackerCollection;
@@ -83,17 +106,31 @@
         card = _ref[_i];
         card.gs = this;
         card.player = this.attacker;
+        this.registerCard(card);
       }
       _ref1 = this.defenser.collectionList;
       _results = [];
       for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
         card = _ref1[_j];
         card.gs = this;
-        _results.push(card.player = this.defenser);
+        card.player = this.defenser;
+        _results.push(this.registerCard(card));
       }
       return _results;
     };
     gs.gameStart = function() {};
+    gs.registerCard = function(card) {
+      this.uids[this.uid++] = card;
+      card.uid = this.uid;
+      return card;
+    };
+    gs.addCard = function(player, cardname) {
+      var card;
+      card = book.card(cardname);
+      card.gs = this;
+      card.player = player;
+      return this.registerCard(card);
+    };
     gs.trigger = {};
     gs.listen = function(waiter, eventName) {
       if (this.trigger[eventName] == null) {

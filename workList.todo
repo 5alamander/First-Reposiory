@@ -1,0 +1,64 @@
+
+#
+#	Hearth Stone
+#
+
+
+System
+-	exist logic
+	----	the "clear & update" logic, may use "fresh" instead
+		[player, gameScene, card]
+		it may be a bad way to implement this, `keep it simple and stupid`
+	
+----	buffs
+	-----	the class type
+	--	the basic buffs
+	---	some special buffs
+	--	when add, use the owner to find the gs
+		bind buffs' effect on gs when add
+----	buff-gback
+	new buff {atk:1, hp:2}, lifeTime = 1 [or -1 means never disappear]
+	buff silence: onAdd, to trigger all exist buff down
+
++!----	trigger
+	bind(waiter, 'trigger name') 
+	if trigger('addBuff', source, this, buff)#`us broadcast`
+		# do something
+	else
+		# other thing
+
+	+!----	change the old triggers
+		gs.listen(t, 'onUse')
+		gs.broadcast('onUse', a)
+		the triggers all use 'when-'
+
+	.-	(may done)to create trigger automatically
+
+	+----	change Card constructor, by the way, orgnize the when-trigger
+		use {}
+
+--	Hero class
+	--	hero skills
+	--	type?
+
+---	die list
+
+--	net work
+
+--	input system
+	2 state
+		wait instruction
+		0, 0, 0 to end a turn
+		x1, x1, to indicate no aim
+
+		wait self turn
+	to simulate
+		use (player, source, aim[, selection])
+
+	!-- 	recheck the conditions
+
+---	activate when out of the collectionList
+
+GB design
+	----	player Action, use(source, aim, selection), selection is for choice card
+	--	a class for selection, just as the card

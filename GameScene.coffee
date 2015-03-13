@@ -38,13 +38,19 @@ class Player
 
 	turnEnd: ->
 	
-	useCard: (handN, aimN) ->
-		#select card by handN
-		#check cost
-		#card.use(aimN)
+	useCard: (handN, aimN, location = 0) ->
+		#use uid
+		#if use a servant, it also need a location
 
-	toString: ->
-		
+	echo: -> 
+		#use the uid and name to echo
+		str = ''
+		str += "[#{@heroList[0].uid}:#{@heroList[0].name}] "
+		for s in @servantList
+			str += "[#{s.uid}:#{s.name}] "
+		str += '\n'
+		for h in @handList
+			str += "[#{h.uid}:#{h.name}]"
 
 
 GameScene = {}
@@ -53,9 +59,11 @@ GameScene.createGameScene = ->
 	gs.attacker = new Player('attacker', gs)
 	gs.defenser = new Player('defenser', gs)
 	gs.attacker.enemy = gs.defenser # set alignment
-	gs.defenser.enemy = gs.attacker
+	gs.defenser.enemy = gs.attacker # say R(attacker, defenser) = 'enemy'
 	gs.turn = 0
 	gs.activePlayer = 0 # 0:attacker, 1:defender
+	gs.uids = {}
+	gs.uidCount = 0
 
 	#init
 	gs.init = (attackerCollection, defenserCollection) -> 
@@ -65,11 +73,25 @@ GameScene.createGameScene = ->
 		for card in @attacker.collectionList
 			card.gs = this
 			card.player = @attacker
+			@registerCard(card)
 		for card in @defenser.collectionList
 			card.gs = this
 			card.player = @defenser
+			@registerCard(card)
 	
 	gs.gameStart = ->
+
+	# get a uid in this gameScene
+	gs.registerCard = (card) ->
+		@uids[@uid++] = card
+		card.uid = @uid
+		return card # for chain
+
+	gs.addCard = (player, cardname) ->
+		card = book.card(cardname)
+		card.gs = this
+		card.player = player
+		@registerCard(card)
 
 	gs.trigger = {}# be used by listen and broadcast
 
