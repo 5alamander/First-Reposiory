@@ -1,6 +1,4 @@
 # First-Reposiory
-for learning github
-
-something new
-
-some changes
+to learn github
+to learn js
+to learn coffee
