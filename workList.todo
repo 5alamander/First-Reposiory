@@ -62,3 +62,9 @@ System
 GB design
 	----	player Action, use(source, aim, selection), selection is for choice card
 	--	a class for selection, just as the card
+
+
+for test
+	--	default card collections to init a gameScene in a moment
+	--	defualt 1: 30 'default' cards
+	--	defualt 2: 15 'default servant' and 15 'default magic'
