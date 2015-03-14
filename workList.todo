@@ -58,6 +58,7 @@ System
 	!-- 	recheck the conditions
 
 ---	activate when out of the collectionList
+	---	means, use the add tag in gameScene
 
 GB design
 	----	player Action, use(source, aim, selection), selection is for choice card

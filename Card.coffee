@@ -45,23 +45,32 @@ cloneCard = (card) ->
 class Card
 	this::gs = {
 		d:'default'
-		broadcast: (args...)-> console.log 'broadcast' + args
+		broadcast: (args...) -> console.log 'broadcast' + args
+		listen: (args...) -> console.log 'listen  ' + args
 	}
 	this::player = {'default'} # default
 	#attribute
-	@buffs = []
 	@cost = 0
 	@currentCost = 0
 	this::uid = 0
 	this::aimType = at.none
+	#@buffs = []
+	#this::tags = [] use the same object
 	#gs means the instance in wich gameScene
 	constructor: (@name, @cost, initial) ->
 		console.log "create a card [#{@name}]"
 		@currentCost = @cost
-		@tags = []#create the tags by it's attribute
+		@buffs = []
+		@tags = []
 		for key, value of initial
-			@tags.push key if key.indexOf('when') is 0
+			@tags.push key if key.indexOf('when') is 0 #create the tags by it's attribute
 			this[key] = value
+
+	activate: -> #add it to cetain tags in gs
+		@gs.listen this, tag for tag in @tags
+		
+	destroy: ->
+		#remove from tags
 
 	#clone this card
 	clone: ->
@@ -297,7 +306,9 @@ t = new Card 'testCard', 1, {
 }
 t.player.currentEnergy = 1
 t.use(cards.dly_Yuehuoshu)
-console.log t.aimType
-console.log cards.dly_Yuehuoshu.type is ct.magic
+console.log t.tags
+console.log cards.dly_Yuehuoshu.tags
+t.activate()
+console.log t.gs
 
 console.log 'load Cards..'

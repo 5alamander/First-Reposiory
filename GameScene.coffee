@@ -81,6 +81,9 @@ GameScene.createGameScene = ->
 	
 	gs.gameStart = ->
 
+	gs.collection1 = ->
+
+
 	# get a uid in this gameScene
 	gs.registerCard = (card) ->
 		@uids[@uid++] = card
@@ -95,16 +98,18 @@ GameScene.createGameScene = ->
 
 	gs.trigger = {}# be used by listen and broadcast
 
-	gs.listen = (waiter, eventName) ->
-		#if @trigger[eventName]? is false
-		#	@trigger[eventName] = []
-		@trigger[eventName] = [] unless @trigger[eventName]?
-		@trigger[eventName].push waiter
+	gs.listen = (waitter, eventName) ->
+		unless @trigger[eventName]? then @trigger[eventName] = []
+		@trigger[eventName].push waitter
+
+	gs.disListen = (waitter, eventName) ->
+		if @trigger[eventName]?
+			@trigger[eventName] = (card for card in @trigger[eventName] when !(card is waitter))
 
 	gs.broadcast = (eventName, args...) ->
-		if @trigger[eventName]? is false then return false # pass it
-		for waiter in @trigger[eventName]
-			return false if waiter[eventName](args...) is false
+		unless @trigger[eventName]? then return false # pass it
+		for waitter in @trigger[eventName]
+			return false if waitter[eventName](args...) is false
 		return true
 
 
@@ -122,6 +127,8 @@ console.log t.tags
 t.startListen()
 gs.broadcast('whenDie', a)
 gs.broadcast('whenCall', a)
+#gs.disListen t, 'whenDie'
+console.log gs.trigger
 #package
 console.log 'load GameScene..'
 root = exports ? window

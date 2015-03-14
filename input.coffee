@@ -36,7 +36,5 @@ selectLocation = (player, n) ->
 	tarray = player.servantList
 	#insert
 
-(if a?
-	console.log 'aaa'
-else
-	console.log 'bbb') for i in [1..10]
+echo = (gs, n) ->
+	

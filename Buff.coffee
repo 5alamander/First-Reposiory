@@ -111,3 +111,10 @@ d() unless false
 
 #console.log key + ' ' + value for key, value of trigger
 eval("console.log ('asdf')")
+
+console.log 'bind'
+d = {name : 'd'}
+d.recall = (closure) ->
+	closure()
+
+d.recall(closure = =>console.log this.name)
