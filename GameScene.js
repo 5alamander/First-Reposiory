@@ -40,9 +40,19 @@
 
     Player.prototype.drawCard = function() {
       var t;
-      t = remove(this.collectionList, random(this.collectionList.length));
+      t = this.pickCollection();
       this.handList.push(t);
-      return typeof t.onDraw === "function" ? t.onDraw() : void 0;
+      if (typeof t.onDraw === "function") {
+        t.onDraw();
+      }
+      return t;
+    };
+
+    Player.prototype.pickCollection = function() {
+      var t;
+      t = remove(this.collectionList, random(this.collectionList.length));
+      t.activate();
+      return t;
     };
 
     Player.prototype.turnStart = function() {
@@ -54,6 +64,19 @@
     };
 
     Player.prototype.turnEnd = function() {};
+
+    Player.prototype.clear = function() {};
+
+    Player.prototype.update = function() {
+      var t, _i, _len, _ref, _results;
+      _ref = __slice.call(this.handList).concat(__slice.call(this.heroList), __slice.call(this.servantList));
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        t = _ref[_i];
+        _results.push(t.update);
+      }
+      return _results;
+    };
 
     Player.prototype.useCard = function(handN, aimN, location) {
       if (location == null) {
@@ -119,6 +142,61 @@
       return _results;
     };
     gs.gameStart = function() {};
+    gs.init1 = function() {
+      var c1, c2, i;
+      c1 = (function() {
+        var _i, _results;
+        _results = [];
+        for (i = _i = 1; _i <= 30; i = ++_i) {
+          _results.push(book.card('tCard'));
+        }
+        return _results;
+      })();
+      c2 = (function() {
+        var _i, _results;
+        _results = [];
+        for (i = _i = 1; _i <= 30; i = ++_i) {
+          _results.push(book.card('tCard'));
+        }
+        return _results;
+      })();
+      return this.init(c1, c2);
+    };
+    gs.init2 = function() {
+      var c1, c2, i;
+      c1 = (function() {
+        var _i, _results;
+        _results = [];
+        for (i = _i = 1; _i <= 15; i = ++_i) {
+          _results.push(book.card('tCard'));
+        }
+        return _results;
+      })();
+      c1 = (function() {
+        var _i, _results;
+        _results = [];
+        for (i = _i = 1; _i <= 15; i = ++_i) {
+          _results.push(book.card('dly_Yuehuoshu'));
+        }
+        return _results;
+      })();
+      c2 = (function() {
+        var _i, _results;
+        _results = [];
+        for (i = _i = 1; _i <= 15; i = ++_i) {
+          _results.push(book.card('tCard'));
+        }
+        return _results;
+      })();
+      return c2 = (function() {
+        var _i, _results;
+        _results = [];
+        for (i = _i = 1; _i <= 15; i = ++_i) {
+          _results.push(book.card('dly_Yuehuoshu'));
+        }
+        return _results;
+      })();
+    };
     gs.registerCard = function(card) {
       this.uids[this.uid++] = card;
       card.uid = this.uid;
@@ -132,22 +210,39 @@
       return this.registerCard(card);
     };
     gs.trigger = {};
-    gs.listen = function(waiter, eventName) {
+    gs.listen = function(waitter, eventName) {
       if (this.trigger[eventName] == null) {
         this.trigger[eventName] = [];
       }
-      return this.trigger[eventName].push(waiter);
+      return this.trigger[eventName].push(waitter);
+    };
+    gs.disListen = function(waitter, eventName) {
+      var card;
+      if (this.trigger[eventName] != null) {
+        return this.trigger[eventName] = (function() {
+          var _i, _len, _ref, _results;
+          _ref = this.trigger[eventName];
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            card = _ref[_i];
+            if (!(card === waitter)) {
+              _results.push(card);
+            }
+          }
+          return _results;
+        }).call(this);
+      }
     };
     gs.broadcast = function() {
-      var args, eventName, waiter, _i, _len, _ref;
+      var args, eventName, waitter, _i, _len, _ref;
       eventName = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-      if ((this.trigger[eventName] != null) === false) {
+      if (this.trigger[eventName] == null) {
         return false;
       }
       _ref = this.trigger[eventName];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        waiter = _ref[_i];
-        if (waiter[eventName].apply(waiter, args) === false) {
+        waitter = _ref[_i];
+        if (waitter[eventName].apply(waitter, args) === false) {
           return false;
         }
       }
@@ -172,11 +267,15 @@
 
   console.log(t.tags);
 
-  t.startListen();
+  gs.init1();
 
-  gs.broadcast('whenDie', a);
+  t = gs.attacker.drawCard();
 
-  gs.broadcast('whenCall', a);
+  t.destroy();
+
+  gs.attacker.update();
+
+  console.log(gs.trigger);
 
   console.log('load GameScene..');
 

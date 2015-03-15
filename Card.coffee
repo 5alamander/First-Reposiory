@@ -68,9 +68,9 @@ class Card
 
 	activate: -> #add it to cetain tags in gs
 		@gs.listen this, tag for tag in @tags
-		
-	destroy: ->
-		#remove from tags
+
+	destroy: -> #disActivate the card from the gs
+		@gs.disListen this, tag for tag in @tags
 
 	#clone this card
 	clone: ->

@@ -10,7 +10,7 @@ System
 		[player, gameScene, card]
 		it may be a bad way to implement this, `keep it simple and stupid`
 	
-----	buffs
+!----	buffs
 	-----	the class type
 	--	the basic buffs
 	---	some special buffs
@@ -57,7 +57,7 @@ System
 
 	!-- 	recheck the conditions
 
----	activate when out of the collectionList
++---	activate when out of the collectionList
 	---	means, use the add tag in gameScene
 
 GB design

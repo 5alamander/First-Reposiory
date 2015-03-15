@@ -27,9 +27,15 @@ class Player
 
 	#draw card from collection to hand
 	drawCard: ->
-		t = remove(@collectionList, random(@collectionList.length))
+		t = @pickCollection()
 		@handList.push t
 		t.onDraw?()# only some card
+		return t # for chain
+
+	pickCollection: ->
+		t = remove(@collectionList, random(@collectionList.length))
+		t.activate()
+		return t
 
 	turnStart: ->
 		#get turn energy
@@ -37,6 +43,16 @@ class Player
 		currentEnergy = energy
 
 	turnEnd: ->
+
+	clear: ->
+		t.clear() for t in @handList
+		t.clear() for t in @servantList
+		t.clear() for t in heroList
+
+	update: ->
+		t.update() for t in @handList
+		t.update() for t in @servantList
+		t.update() for t in @heroList
 	
 	useCard: (handN, aimN, location = 0) ->
 		#use uid
@@ -81,8 +97,16 @@ GameScene.createGameScene = ->
 	
 	gs.gameStart = ->
 
-	gs.collection1 = ->
+	gs.init1 = ->
+		c1 = (book.card('tCard') for i in [1..30])
+		c2 = (book.card('tCard') for i in [1..30])
+		@init(c1, c2)
 
+	gs.init2 = ->
+		c1 = (book.card('tCard') for i in [1..15])
+		c1 = (book.card('dly_Yuehuoshu') for i in [1..15])
+		c2 = (book.card('tCard') for i in [1..15])
+		c2 = (book.card('dly_Yuehuoshu') for i in [1..15])
 
 	# get a uid in this gameScene
 	gs.registerCard = (card) ->
@@ -124,10 +148,12 @@ t = book.card('tCard')
 gs.init([a,t], [b])
 t.use(a)
 console.log t.tags
-t.startListen()
-gs.broadcast('whenDie', a)
-gs.broadcast('whenCall', a)
 #gs.disListen t, 'whenDie'
+gs.init1()
+t = gs.attacker.drawCard()
+#gs.attacker.drawCard()
+t.destroy()
+gs.attacker.update()
 console.log gs.trigger
 #package
 console.log 'load GameScene..'
