@@ -15,7 +15,7 @@ class Buff
 			this[key] = value
 
 	# the default interval is 1
-	update: (n = 0) ->
+	update: (n) ->
 		@lifeTime -= n
 		unless @lifeTime
 			@owner.removeBuff this
@@ -25,11 +25,18 @@ class Buff
 		if @maxHp and @owner.currentMaxHp then @owner.currentMaxHp += @maxHp
 		@onUpdate?(n)
 
+	# should be used by card
 	activate: -> #add it to cetain tags in gs
 		@owner.gs.listen this, tag for tag in @tags
 
 	destroy: -> #disActivate the card from the gs
 		@owner.gs.disListen this, tag for tag in @tags
+
+
+
+# handle
+root = exports ? window
+root.Buff = Buff
 
 t = new Buff
 

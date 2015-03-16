@@ -11,14 +11,17 @@ System
 		it may be a bad way to implement this, `keep it simple and stupid`
 	
 !----	buffs
-	-----	the class type
+	+-----	the class type
 	--	the basic buffs
 	---	some special buffs
-	--	when add, use the owner to find the gs
+	+--	when add, use the owner to find the gs
 		bind buffs' effect on gs when add
 ----	buff-gback
 	new buff {atk:1, hp:2}, lifeTime = 1 [or -1 means never disappear]
 	buff silence: onAdd, to trigger all exist buff down
+
+---	use hero to cost energy
+	remove it from player,(player should not know there's energy)
 
 +!----	trigger
 	bind(waiter, 'trigger name') 

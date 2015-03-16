@@ -4,6 +4,7 @@ book = require './Card.coffee'
 cards = book.cards
 servants = book.servants
 magics = book.magics
+Buff = book.Buff
 
 random = (n) ->
 	Math.floor(Math.random() * n)
@@ -24,17 +25,20 @@ class Player
 		@handList = []
 		@servantList = []
 
-	#draw card from collection to hand
-	drawCard: ->
-		t = @pickCollection()
-		@handList.push t
-		t.onDraw?()# only some card
-		return t # for chain
-
-	pickCollection: ->
+	collection_pick: ->
 		t = remove(@collectionList, random(@collectionList.length))
 		t.activate()
 		return t
+
+	#draw card from collection to hand
+	drawCard: ->
+		t = @collection_pick()
+		@handList.push t
+		t.onDraw?()# only some card
+		#a tick
+		@clear()
+		@update()
+		return t # for chain
 
 	createCard: (cardName) ->
 		t = book.card(cardName)
@@ -45,18 +49,23 @@ class Player
 		#get turn energy
 		energy += 1 if energy < 10
 		currentEnergy = energy
+		#a tick
+		@clear()
+		@update()
 
 	turnEnd: ->
+		@clear()
+		@update(1)
 
 	clear: ->
 		t.clear() for t in @handList
 		t.clear() for t in @servantList
-		t.clear() for t in heroList
+		t.clear() for t in @heroList
 
-	update: ->
-		t.update() for t in @handList
-		t.update() for t in @servantList
-		t.update() for t in @heroList
+	update: (n = 0) ->
+		t.update(n) for t in @handList
+		t.update(n) for t in @servantList
+		t.update(n) for t in @heroList
 	
 	useCard: (handN, aimN, location = 0) ->
 		#use uid
@@ -111,11 +120,12 @@ GameScene.createGameScene = ->
 		c1 = (book.card('dly_Yuehuoshu') for i in [1..15])
 		c2 = (book.card('tCard') for i in [1..15])
 		c2 = (book.card('dly_Yuehuoshu') for i in [1..15])
+		@init(c1, c2)
 
 	# get a uid in this gameScene
 	gs.registerCard = (card) ->
-		@uids[@uid++] = card
-		card.uid = @uid
+		@uids[@uidCount++] = card
+		card.uid = @uidCount
 		return card # for chain
 
 	gs.addCard = (player, cardname) ->
@@ -146,32 +156,37 @@ GameScene.createGameScene = ->
 	
 console.log '\n**test**'
 gs = GameScene.createGameScene()
-a = cards.tCard.clone()
-b = cards.tCard.clone()
-t = book.card('tCard')
-gs.init([a,t], [b])
-t.use(a)
-console.log t.tags
-#gs.disListen t, 'whenDie'
+
 gs.init1()
 t = gs.attacker.drawCard()
-#gs.attacker.drawCard()
-t.destroy()
 gs.attacker.update()
+
+b = new Buff
+	name:'tbuff'
+	atk:1
+	maxHp:2
+	whenDraw:->
+		console.log 'draw'
+t.addBuff b
 console.log gs.trigger
+
+
+
 #package
 console.log 'load GameScene..'
 root = exports ? window
 root.GameScene = GameScene
 
 #for cmd test
+###
 gsTest = {}
 gsTest = GameScene.createGameScene()
-gs.init([a,b],[])
+gsTest.init1()
 p1 = gsTest.attacker
 p2 = gsTest.defenser
 root.gsTest = gsTest
 root.p1 = p1
 root.p2 = p2
+###
 
 

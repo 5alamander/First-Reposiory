@@ -1,3 +1,4 @@
+
 #define card type
 ct = 
 	magic: 1
@@ -30,6 +31,10 @@ root.servants = servants
 root.magics = magics
 root.ct = ct
 root.at = at
+#require buff
+root.Buff = require('./Buff.coffee').Buff
+Buff = root.Buff
+
 root.card = (name) ->
 	cards[name]?.clone()
 
@@ -74,6 +79,9 @@ class Card
 			@tags.push key if key.indexOf('when') is 0 #create the tags by it's attribute
 			this[key] = value
 
+	#toString: ->
+	#	"#{@name}:#{@uid},#{@buffs}"
+
 	activate: -> #add it to cetain tags in gs
 		@gs.listen this, tag for tag in @tags
 
@@ -87,8 +95,8 @@ class Card
 	clear: ->
 		@currentCost = @cost
 
-	update: ->
-		buff.update() for buff in @buffs
+	update: (n) ->
+		buff.update(n) for buff in @buffs
 
 	#Player use initiative, return boolean
 	use: (aim) ->
@@ -121,9 +129,6 @@ class Card
 	removeBuff: (buff) ->
 		buff.disActivate()
 		@buffs = (t for t in @buffs when t isnt buff)
-
-	startListen: ->
-		@gs.listen(this, eventName) for eventName in @tags
 
 	damage: (aim, v) ->
 		# damage can be refuse by 'shendun' or 'mianyi'...
@@ -317,6 +322,5 @@ t.use(cards.dly_Yuehuoshu)
 console.log t.tags
 console.log cards.dly_Yuehuoshu.tags
 t.activate()
-console.log t.gs
 
 console.log 'load Cards..'
