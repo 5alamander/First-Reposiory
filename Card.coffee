@@ -30,6 +30,14 @@ root.servants = servants
 root.magics = magics
 root.ct = ct
 root.at = at
+root.card = (name) ->
+	cards[name]?.clone()
+
+root.magic = (name) ->
+	magics[name]?.clone()
+
+root.servant = (name) ->
+	servants[name]?.clone()
 
 cloneCard = (card) ->
 	clone = {}
@@ -80,7 +88,7 @@ class Card
 		@currentCost = @cost
 
 	update: ->
-		#for buffs
+		buff.update() for buff in @buffs
 
 	#Player use initiative, return boolean
 	use: (aim) ->
@@ -104,9 +112,15 @@ class Card
 		return @gs.broadcast('whenUseCard', this, aim)
 
 
-	addBuff: (buff)->
+	addBuff: (buff) ->
 		# if trigger('addBuff', source, this, buff)
+		buff.owner = this
+		buff.activate()
 		@buffs.push buff
+
+	removeBuff: (buff) ->
+		buff.disActivate()
+		@buffs = (t for t in @buffs when t isnt buff)
 
 	startListen: ->
 		@gs.listen(this, eventName) for eventName in @tags
@@ -286,21 +300,15 @@ new Magic 'dly_Conglinzhihun', 4, 0, {
 		#add when die buff
 }
 
+# do collection
 do ->
 	for key, value of magics
 		cards[key] = value
 	for key, value of servants
 		cards[key] = value
 
-root.card = (name) ->
-	cards[name]?.clone()
 
-root.magic = (name) ->
-	magics[name]?.clone()
-
-root.servant = (name) ->
-	servants[name]?.clone()
-
+#test**************************
 t = new Card 'testCard', 1, {
 	whenDraw: -> console.log 'whenDraw'
 }

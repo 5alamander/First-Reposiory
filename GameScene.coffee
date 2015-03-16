@@ -4,7 +4,6 @@ book = require './Card.coffee'
 cards = book.cards
 servants = book.servants
 magics = book.magics
-trigger = book.trigger
 
 random = (n) ->
 	Math.floor(Math.random() * n)
@@ -34,6 +33,11 @@ class Player
 
 	pickCollection: ->
 		t = remove(@collectionList, random(@collectionList.length))
+		t.activate()
+		return t
+
+	createCard: (cardName) ->
+		t = book.card(cardName)
 		t.activate()
 		return t
 
@@ -128,7 +132,7 @@ GameScene.createGameScene = ->
 
 	gs.disListen = (waitter, eventName) ->
 		if @trigger[eventName]?
-			@trigger[eventName] = (card for card in @trigger[eventName] when !(card is waitter))
+			@trigger[eventName] = (card for card in @trigger[eventName] when card isnt waitter)
 
 	gs.broadcast = (eventName, args...) ->
 		unless @trigger[eventName]? then return false # pass it
