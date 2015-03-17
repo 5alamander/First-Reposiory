@@ -67,6 +67,7 @@ class Card
 	@currentCost = 0
 	this::uid = 0
 	this::aimType = at.none
+	this::isSilence = false
 	#@buffs = []
 	#this::tags = [] use the same object
 	#gs means the instance in wich gameScene
@@ -78,9 +79,6 @@ class Card
 		for key, value of initial
 			@tags.push key if key.indexOf('when') is 0 #create the tags by it's attribute
 			this[key] = value
-
-	#toString: ->
-	#	"#{@name}:#{@uid},#{@buffs}"
 
 	activate: -> #add it to cetain tags in gs
 		@gs.listen this, tag for tag in @tags
@@ -119,6 +117,9 @@ class Card
 		#return if trigger refuse the card
 		return @gs.broadcast('whenUseCard', this, aim)
 
+	silence: ->
+		@isSilence = true
+		buff.isSilence = true for buff in @buffs
 
 	addBuff: (buff) ->
 		# if trigger('addBuff', source, this, buff)
@@ -127,7 +128,8 @@ class Card
 		@buffs.push buff
 
 	removeBuff: (buff) ->
-		buff.disActivate()
+		buff.destroy()
+		buff.owner = null
 		@buffs = (t for t in @buffs when t isnt buff)
 
 	damage: (aim, v) ->
@@ -162,8 +164,8 @@ class Servant extends Card
 		@currentMaxHp = @maxHp
 		@attackTimes = 1
 
-	update: ->
-		super()
+	update: (n) ->
+		super(n)
 		@currentHp = @currentMaxHp if @currentHp > @currentMaxHp
 
 	beCalled: ->

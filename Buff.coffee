@@ -3,6 +3,7 @@ class Buff
 	this::cost = 0
 	this::atk = 0
 	this::maxHp = 0
+	this::isSilence = false
 	this::owner = {
 		removeBuff:->console.log 'temp remove'
 		gs:{listen:-> console.log 'temp listen', disListen:-> console.log 'temp disListen'}
@@ -17,8 +18,10 @@ class Buff
 	# the default interval is 1
 	update: (n) ->
 		@lifeTime -= n
-		unless @lifeTime
+		unless @lifeTime > 0
 			@owner.removeBuff this
+			return
+		unless @isSilence is false
 			return
 		if @cost and @owner.currentCost then @owner.currentCost += @cost
 		if @atk and @owner.currentAtk then @owner.currentAtk += @atk

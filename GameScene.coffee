@@ -30,8 +30,9 @@ class Player
 		t.activate()
 		return t
 
-	servantList_remove: (card) ->
-		#TODO
+	servantList_clearDead: ->
+		#delete when hp = 0 // TODO
+		@servantList = (card for card in @servantList when card.currenthp isnt 0)
 
 	#draw card from collection to hand
 	drawCard: ->
@@ -39,8 +40,7 @@ class Player
 		@handList.push t
 		t.onDraw?()# only some card
 		#a tick
-		@clear()
-		@update()
+		@gs.fresh()
 		return t # for chain
 
 	createCard: (cardName) ->
@@ -65,8 +65,7 @@ class Player
 		t.clear() for t in @servantList
 		t.clear() for t in @heroList
 
-	update: (n = 0) ->
-
+	update: (n) ->
 		t.update(n) for t in @handList
 		t.update(n) for t in @servantList
 		t.update(n) for t in @heroList
@@ -144,10 +143,12 @@ GameScene.createGameScene = ->
 		@dieList.push card
 
 	gs.fresh = (n = 0) ->
-		#clear die list
-		#for dieList broadcast
-		@broadcast('whenDie', card) for card in dieList
-
+		# delete card which dead in a tick
+		@broadcast('whenDie', card) for card in @dieList
+		card.disActivate() for card in @dieList
+		@attacker.servantList_clearDead()
+		@defenser.servantList_clearDead()
+		# clear and update for exist logic
 		@attacker.clear()
 		@attacker.update(n)
 		@defenser.clear()
@@ -166,6 +167,7 @@ GameScene.createGameScene = ->
 	gs.broadcast = (eventName, args...) ->
 		unless @trigger[eventName]? then return false # pass it
 		for waitter in @trigger[eventName]
+			continue if waitter.isSilence# to test
 			return false if waitter[eventName](args...) is false
 		return true
 
@@ -178,7 +180,7 @@ gs = GameScene.createGameScene()
 
 gs.init1()
 t = gs.attacker.drawCard()
-gs.attacker.update()
+gs.attacker.update(0)
 
 b = new Buff
 	name:'tbuff'
@@ -187,6 +189,8 @@ b = new Buff
 	whenDraw:->
 		console.log 'draw'
 t.addBuff b
+#t.silence()
+gs.fresh()
 console.log gs.trigger
 
 
