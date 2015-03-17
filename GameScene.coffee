@@ -30,6 +30,9 @@ class Player
 		t.activate()
 		return t
 
+	servantList_remove: (card) ->
+		#TODO
+
 	#draw card from collection to hand
 	drawCard: ->
 		t = @collection_pick()
@@ -63,6 +66,7 @@ class Player
 		t.clear() for t in @heroList
 
 	update: (n = 0) ->
+
 		t.update(n) for t in @handList
 		t.update(n) for t in @servantList
 		t.update(n) for t in @heroList
@@ -93,6 +97,7 @@ GameScene.createGameScene = ->
 	gs.activePlayer = 0 # 0:attacker, 1:defender
 	gs.uids = {}
 	gs.uidCount = 0
+	gs.dieList = []
 
 	#init
 	gs.init = (attackerCollection, defenserCollection) -> 
@@ -133,6 +138,20 @@ GameScene.createGameScene = ->
 		card.gs = this
 		card.player = player
 		@registerCard(card)
+
+	# may not neccessary
+	gs.addToDieList = (card) ->
+		@dieList.push card
+
+	gs.fresh = (n = 0) ->
+		#clear die list
+		#for dieList broadcast
+		@broadcast('whenDie', card) for card in dieList
+
+		@attacker.clear()
+		@attacker.update(n)
+		@defenser.clear()
+		@defenser.update(n)
 
 	gs.trigger = {}# be used by listen and broadcast
 

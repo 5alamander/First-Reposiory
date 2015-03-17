@@ -7,6 +7,8 @@
 System
 -	exist logic
 	----	the "clear & update" logic, may use "fresh" instead
+	-----	clear all then update all,
+			so it just can be combined in player as 'fresh'
 		[player, gameScene, card]
 		it may be a bad way to implement this, `keep it simple and stupid`
 	
@@ -14,6 +16,7 @@ System
 	+-----	the class type
 	--	the basic buffs
 	---	some special buffs
+	---	buff 'silence'
 	+--	when add, use the owner to find the gs
 		bind buffs' effect on gs when add
 ----	buff-gback
@@ -58,7 +61,7 @@ System
 	to simulate
 		use (player, source, aim[, selection])
 
-	!-- 	recheck the conditions
+	.!-- 	(delay)recheck the conditions
 
 +---	activate when out of the collectionList
 	---	means, use the add tag in gameScene
@@ -68,7 +71,7 @@ GB design
 	--	a class for selection, just as the card
 
 
-for test
++for test
 	--	default card collections to init a gameScene in a moment
 	--	defualt 1: 30 'default' cards
 	--	defualt 2: 15 'default servant' and 15 'default magic'
