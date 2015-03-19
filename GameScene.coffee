@@ -25,7 +25,7 @@ class Player
 		@handList = []
 		@servantList = []
 
-	collection_pick: ->
+	collection_pickRandom: ->
 		t = remove(@collectionList, random(@collectionList.length))
 		t.activate()
 		return t
@@ -34,9 +34,52 @@ class Player
 		#delete when hp = 0 // TODO
 		@servantList = (card for card in @servantList when card.currenthp isnt 0)
 
-	#draw card from collection to hand
+	# use them when neccarry
+	# hand - collection
+	collectionToHand: ->
+		#check hand numbers
+		t = remove(@collectionList, random(@collectionList.length))
+		t.activate()
+		#@handList.push t
+		return t
+	handToCollection: ->
+		#disactivate()
+		#remove buff
+	# collection - battle
+	collectionToServantList: ->
+		t = remove(@collectionList, random(@collectionList.length))
+		#activate
+		t.activate()
+		return t
+	servantListToCollection: ->
+		#disactivate()
+		#remove buff
+	# hand - battle
+	handToServantList: ->
+		#remove hand buff
+	servantListToHand: ->
+		#remove servant buff
+	# hand
+	handCreate: ->
+		#activate()
+	handDestroy: ->
+		#disactivate()
+		#remove hand buff
+	# battle
+	servantListCreate: ->
+		#activate()
+	servantListDestroy: ->
+		#disactivate()
+		#remove servant buff
+	# collection
+	collectionCreate: ->
+		#just create
+	collectionDestroy: ->
+		#just destroy
+
+	#
 	drawCard: ->
-		t = @collection_pick()
+		t = @collection_pickRandom()
 		@handList.push t
 		t.onDraw?()# only some card
 		#a tick
