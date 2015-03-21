@@ -84,3 +84,6 @@ test
 	+----	test 'silence'
 	----	test die list
 	----	test hp buffs, and buff 'when-'
+	----	call servant
+
+deadline 3.31
