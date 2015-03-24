@@ -73,7 +73,7 @@ System
 GB design
 	----	player Action, use(source, aim, selection), selection is for choice card
 	--	a class for selection, just as the card
-
+	----	to rebuild the structure of "Card.coffee"
 
 +for test
 	--	default card collections to init a gameScene in a moment
@@ -85,5 +85,9 @@ test
 	----	test die list
 	----	test hp buffs, and buff 'when-'
 	----	call servant
+
+discovers
+	----	higher order function
+		---	Buff.decorateEffect
 
 deadline 3.31

@@ -10,14 +10,16 @@ class Buff
 		} #a default owner to test
 	this::lifeTime = 1#default lifeTime is 1
 	constructor: (initial) ->
+		@turnCount = 0
 		@tags = []
 		for key, value of initial
 			@tags.push key if key.indexOf('when') is 0 #create the tags by it's attribute
-			this[key] = value
+			@createBuffEffect key, value
 
 	# the default interval is 1
 	update: (n) ->
 		@lifeTime -= n
+		@turnCount += n
 		unless @lifeTime > 0
 			@owner.removeBuff this
 			return
@@ -35,6 +37,12 @@ class Buff
 	destroy: -> #disActivate the card from the gs
 		@owner.gs.disListen this, tag for tag in @tags
 
+	# higher order function? to decorate the func and add to this
+	createBuffEffect: (key, func) ->
+		this[key] = (args...) ->
+			unless @isSilence is false then return
+			func.call this, args...
+
 
 
 # handle
@@ -42,6 +50,7 @@ root = exports ? window
 root.Buff = Buff
 
 t = new Buff
+	whenAdd: -> console.log 'when add'
 
 s = new Buff
 
@@ -50,3 +59,7 @@ console.log t.lifeTime
 
 console.log s.lifeTime
 console.log t
+
+t.whenAdd(1,2,3)
+t.isSilence = true
+t.whenAdd(1)
