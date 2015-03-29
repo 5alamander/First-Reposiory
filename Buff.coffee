@@ -38,47 +38,32 @@ class Buff
 
 	# higher order function? to decorate the func and add to this
 	decorateBySilence: (key, func) ->
-		if this[key]? then throw new Error 'the key has already exist'
+		#if this[key]? then throw new Error 'the key has already exist'
 		this[key] = (args...) ->
 			unless @isSilence is false then return
 			func.call this, args...
 
-	decorate2: (key, func) ->
-		if Buff::[key]? then throw new Error 'the key has already exist'
-		Buff::[key] = (args...) ->
-			console.log key + ' ' + [args...]
+	decorate2: (object, key, func) ->
+		unless object? then object = Buff
+		#if object::[key]? then throw new Error 'the key has already exist'
+		object::[key] = (args...) ->
+			func.call this, args...
 
 
 # handle
 root = exports ? window
 root.Buff = Buff
 
+
+class Buff2 extends Buff
+
 t = new Buff
-	whenAdd: -> console.log 'when add'
+f = ->console.log 'delete buff'
+t.decorate2(Buff, 'delete', f)
 
-s = new Buff
+d = new Buff2
+f = ->console.log 'overrid delete buff'
+d.decorate2(Buff2, 'delete', f)
 
-t.update(1)
-console.log t.lifeTime
-
-console.log s.lifeTime
-console.log t
-
-t.whenAdd(1,2,3)
-t.isSilence = true
-t.whenAdd(1)
-
-t.decorate2('delete', ->)
-s.decorate2('dle', ->)
-s.delete('asd')
-console.log t
-
-a = (name) ->
-	->
-		console.log name
-
-b = a('asdf')
-c = a('csdf')
-
-b()
-c()
+t.delete()
+d.delete()

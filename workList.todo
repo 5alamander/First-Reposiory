@@ -18,8 +18,9 @@ System
 	---	some special buffs
 	+---	buff 'silence'
 	+--	when add, use the owner to find the gs
-	-----	buff clock
+	+-----	buff clock
 		bind buffs' effect on gs when add
+	--	confirm buff life time
 ----	buff-gback
 	new buff {atk:1, hp:2}, lifeTime = 1 [or -1 means never disappear]
 	buff silence: onAdd, to trigger all exist buff down
