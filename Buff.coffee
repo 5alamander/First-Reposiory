@@ -1,4 +1,3 @@
-
 class Buff
 	this::cost = 0
 	this::atk = 0
@@ -14,7 +13,7 @@ class Buff
 		@tags = []
 		for key, value of initial
 			@tags.push key if key.indexOf('when') is 0 #create the tags by it's attribute
-			@createBuffEffect key, value
+			@decorateBySilence key, value
 
 	# the default interval is 1
 	update: (n) ->
@@ -38,11 +37,16 @@ class Buff
 		@owner.gs.disListen this, tag for tag in @tags
 
 	# higher order function? to decorate the func and add to this
-	createBuffEffect: (key, func) ->
+	decorateBySilence: (key, func) ->
+		if this[key]? then throw new Error 'the key has already exist'
 		this[key] = (args...) ->
 			unless @isSilence is false then return
 			func.call this, args...
 
+	decorate2: (key, func) ->
+		if Buff::[key]? then throw new Error 'the key has already exist'
+		Buff::[key] = (args...) ->
+			console.log key + ' ' + [args...]
 
 
 # handle
@@ -63,3 +67,18 @@ console.log t
 t.whenAdd(1,2,3)
 t.isSilence = true
 t.whenAdd(1)
+
+t.decorate2('delete', ->)
+s.decorate2('dle', ->)
+s.delete('asd')
+console.log t
+
+a = (name) ->
+	->
+		console.log name
+
+b = a('asdf')
+c = a('csdf')
+
+b()
+c()

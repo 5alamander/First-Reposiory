@@ -34,6 +34,7 @@ root.at = at
 #require buff
 root.Buff = require('./Buff.coffee').Buff
 Buff = root.Buff
+tBuff = new Buff # to use the function
 
 root.card = (name) ->
 	cards[name]?.clone()
@@ -77,8 +78,10 @@ class Card
 		@buffs = []
 		@tags = []
 		for key, value of initial
-			@tags.push key if key.indexOf('when') is 0 #create the tags by it's attribute
-			this[key] = value
+			#create tags for gs to call
+			@tags.push key if key.indexOf('when') is 0
+			#decorate fucntions with silence
+			tBuff.decorateBySilence.call this, key, value
 
 	activate: -> #add it to cetain tags in gs
 		@gs.listen this, tag for tag in @tags
@@ -319,9 +322,11 @@ do ->
 t = new Card 'testCard', 1, {
 	whenDraw: -> console.log 'whenDraw'
 }
+d = new Buff
+
 t.player.currentEnergy = 1
 t.use(cards.dly_Yuehuoshu)
-console.log t.tags
+console.log t
 console.log cards.dly_Yuehuoshu.tags
 t.activate()
 
