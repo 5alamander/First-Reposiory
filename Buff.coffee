@@ -47,6 +47,7 @@ class Buff
 		unless object? then object = Buff
 		#if object::[key]? then throw new Error 'the key has already exist'
 		object::[key] = (args...) ->
+			console.log 'call some function here'
 			func.call this, args...
 
 
@@ -67,3 +68,4 @@ d.decorate2(Buff2, 'delete', f)
 
 t.delete()
 d.delete()
+
