@@ -69,3 +69,5 @@ d.decorate2(Buff2, 'delete', f)
 t.delete()
 d.delete()
 
+a = []
+console.log a[0]

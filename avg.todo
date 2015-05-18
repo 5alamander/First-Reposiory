@@ -1,0 +1,83 @@
+#
+# AVG game todo list
+#
+
+file reader system
+-	read file by line
+-	scene event
+	--	click (next): cocos click event
+	--	chose (chose): choice menu
+		-	text choice
+		-	picture choice
+	-	if condition: to check is the condition pass
+		-	check flag
+		-	check value
+-	title
+-	charactor in
+	-	
+-	charactor out
+-	text dialouge: rich text? depends on cocos
+	-	charactor dialouge
+
+-	charactor sound
+
+-	music start
+	-	music(): use default music
+	-	music(id): music config file 
+	-	music(filePath): use the url path
+-	music end
+
+-	data operation
+	-	data(flagName): create a flag named "flagName"
+	-	data(name, number)
+		: create name-number if not exists
+		: add number if exists
+
+-	call Scene (sceneid): go to other scene
+-	call sub-Scene (sceneid, from, to): for some normal scene
+-	event map: to bind the text to functions
+
+configs
+-	music_0 : "path"
+-	music_start_time : 500ms
+-	music_end_time : 500ms
+
+
+scene
+-	onEnter
+-	onExit
+
+charactor system
+-	name
+-	sound
+-	picture (big & head?)
+-	emotion
+
+background system
+-	picture
+-	whether
+-	date time
+
+effect system
+-	operation sound: click & skip & buttons
+-	shake
+	-	shake(): default to shake the scene
+	-	shake(charactor): charactor name? position?
+-	blink
+	-	blink(): default to blick the scene
+	-	blick(charactor): charactor name? position?
+-	whether effect
+	-	snow
+	-	rain
+
+menu system
+-	start menu
+	-	save
+	-	load
+	-	settings
+		-	music button
+		-	sound button
+		-	charactor sound button
+-	ui menu
+	-	skip
+	-	voice on/off

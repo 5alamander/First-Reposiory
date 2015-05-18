@@ -19,6 +19,15 @@ stdin.on 'data', (input) ->
 	console.log 'check passed, send instruction to gs\n'
 	sendInstruction(nums...)
 
+###*
+ * send
+ * @param  {string}
+ * @param  {[type|string]}
+ * @param  {[type]}
+ * @param  {[type]}
+ * @param  {[type]}
+ * @return {[type]}
+###	
 sendInstruction = (player, source, aim, selection = 0, location = 0) ->
 	console.log player + ' ' + source + ' ' + aim + ' ' + selection
 
@@ -38,3 +47,4 @@ selectLocation = (player, n) ->
 
 echo = (gs, n) ->
 	
+

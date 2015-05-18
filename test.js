@@ -1,3 +1,5 @@
+
+
 A = {
 	_name : "a",
 	_age : 1,
@@ -24,4 +26,4 @@ var context = (function(){
 }());
 
 
-console.log(context.welcomeScene);
+console.log(context);
