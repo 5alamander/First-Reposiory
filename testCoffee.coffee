@@ -25,12 +25,45 @@ class gs
 #gs = () ->
 #	console.log 'gs function'
 
-a = [4,2,3,4]
+o = {id: 1}
+a = [4,2,3,4, o, o]
 b = [3,2,1]
 e = []
+
 remove = (list, a) ->
 	list = (t for t in list when t isnt a)
 	return list
 
-list = remove(e, 0)
-console.log e[0]
+Array::delete = (o) ->
+	n = @indexOf o
+	if n is -1 then return null
+	@splice(n, 1)
+	@delete(o)
+	return this
+
+a.delete 5
+console.log a
+
+checkTime = (cb) ->
+	console.time('checkTime')
+	cb() for i in [0..10000]
+	console.timeEnd('checkTime')
+
+# checkTime ->
+# 	o = {id: 1}
+# 	a = [4, 2, 3, 4, o]
+# 	a.delete(o)
+
+# checkTime ->
+# 	o = {id: 1}
+# 	a = [4, 2, 3, 4, o]
+# 	a = (t for t in a when t isnt o)
+
+# checkTime ->
+# 	o = {id: 1}
+# 	a = [4, 2, 3, 4, o]
+# 	a.delete(4)
+
+checkAtan = (x, y) ->
+	console.log Math.atan2(x, y) / Math.PI * 180 | 0
+
